@@ -11,7 +11,6 @@
 ; [ ] tiling
 ; [x] SLIME connection
 ; [ ] git repo
-; [ ] message oli bendall
 ; [ ] gpu init
 
 
@@ -60,15 +59,39 @@ Refreshes font cache & returns updated values"
   (ql:quickload :swank)
   (swank:start-server))
 
-(run-shell-command "emacs --daemon")
 
-; doesn't seem to work through "run-shell-command"
 ;; COMMANDS --------------------------------------------------------------------
-(defcommand lock ()
-  (run-shell-command "mpc pause && pauseallmpv && rm -f /tmp/screenshot.png /tmp/out.png && scrot /tmp/screenshot.png && ~/git/corrupter/corrupter /tmp/screenshot.png /tmp/out.png && i3lock -i /tmp/out.png"))
+; doesn't seem to work through "run-shell-command"
+(defcommand lock () ()
+  "A command to lock the DE with corrupted screen
+Pause PMC, remove tmp screenshot, capture new frame,
+corrupt capture,invoke lock with output
 
+Every instance of `run-shell-command awaits output "
+  (run-shell-command "mpc pause" t)
+  (run-shell-command "pauseallmpv" t)
+  (run-shell-command "rm -f /tmp/screenshot.png /tmp/out.png" t)
+  (run-shell-command "scrot /tmp/screenshot.png" t)
+  (run-shell-command "~/git/corrupter/corrupter /tmp/screenshot.png /tmp/out.png" t)
+  (run-shell-command "i3lock -i /tmp/out.png" t))
+
+
+(defcommand vol-down () ()
+  "Volume down through lmc
+TODO: Make interactive"
+  (run-shell-command "lmc down 5"))
+
+(defcommand vol-up () ()
+  "Volume up through lmc
+TODO: Make interactive"
+  (run-shell-command "lmc up 5"))
+
+(defcommand run-or-raise-terminal () ()
+  "Opens the system terminal, as exported in ~/.profile"
+  (run-or-raise (getenv "TERMINAL") '()))
 
 (defcommand run-or-raise-browser () ()
+  "Opens the system browser, as exported in ~/.profile"
     (run-or-raise (getenv "BROWSER") '()))
 
 (defun run-shell-command-no-startup (command)
@@ -76,6 +99,8 @@ Refreshes font cache & returns updated values"
 
 ;;; KEYMAPS --------------------------------------------------------------------
 (defun show-key-seq (key seq val)
+  "Shows the currently active key sequence if in a map
+e.g. s-t OR C-t"
   (message (print-key-seq (reverse seq))))
 (add-hook *key-press-hook* 'show-key-seq)
 
@@ -92,6 +117,7 @@ Refreshes font cache & returns updated values"
 
 (define-key *top-map* (kbd "s-e") "emacs")
 (define-key *top-map* (kbd "s-w") "run-or-raise-browser")
+(define-key *top-map* (kbd "s-RET") "run-or-raise-terminal")
 
 (define-key *top-map* (kbd "s-h") "move-focus left")
 (define-key *top-map* (kbd "s-j") "move-focus down")
@@ -116,6 +142,7 @@ Refreshes font cache & returns updated values"
 
 
 ;;; EXTERNS --------------------------------------------------------------------
+(run-shell-command "emacs --daemon")
 (run-shell-command "compton")
 (run-shell-command "setbg ~/.config/wall.png")
 (load "~/.stumpwm.d/visual.lisp")
