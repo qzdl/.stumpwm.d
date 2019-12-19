@@ -15,9 +15,7 @@
 ; [ ] scale inner gaps
 ; [ ] scale outer gaps
 ; [ ] scale fonts
-
-
-
+; [ ] split to files
 
 
 ;; VISUAL ----------------------------------------------------------------------
@@ -72,6 +70,8 @@ Refreshes font cache & returns updated values"
       stumpwm::*float-window-border* 2
       stumpwm::*float-window-title-height* 5
       *mouse-focus-policy* :click)
+
+
 ;; SERVER ----------------------------------------------------------------------
 
 (ql:quickload :swank)
@@ -84,6 +84,7 @@ Refreshes font cache & returns updated values"
 
 
 ;; COMMANDS --------------------------------------------------------------------
+
 (defcommand lock () ()
   "A command to lock the DE with corrupted screen
 Pause PMC, remove tmp screenshot, capture new frame,
@@ -174,3 +175,5 @@ e.g. s-t OR s-f"
 (run-shell-command "compton")
 (run-shell-command "setbg ~/.config/wall.png")
 (load "~/.stumpwm.d/visual.lisp")
+(load "~/.stumpwm.d/kbd.lisp")
+(load "~/.stumpwm.d/command.lisp")
