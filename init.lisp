@@ -5,15 +5,22 @@
 ; [x] background
 ; [x] transparency (compton?)
 ; [ ] program *top-map* bindings
-; - [ ] $EDITOR
-; - [ ] $BROWSER
-; [ ] lock (maybe ditch i3lock)
+; - [x] $EDITOR
+; - [x] $BROWSER
+; [x] lock (maybe ditch i3lock)
 ; [ ] tiling
 ; [x] SLIME connection
-; [ ] git repo
-; [ ] gpu init
+; [x] git repo
+; [ ] gpu init/toggle
+; [ ] scale inner gaps
+; [ ] scale outer gaps
+; [ ] scale fonts
 
 
+
+
+
+;; VISUAL ----------------------------------------------------------------------
 
 (ql:quickload :clx-truetype)
 (load-module "ttf-fonts")
@@ -41,18 +48,34 @@ Refreshes font cache & returns updated values"
   clx-truetype:*font-dirs*)
 
 (restore-default-font-dir)
+
 (add-font-dir "Liberation")
+
 (defvar font-size 13)
+
 (set-font (make-instance 'xft:font
                           :family "Liberation Mono"
                           :subfamily "Bold"
                           :size font-size))
 
+(setf swm-gaps:*inner-gaps-size* 15
+      swm-gaps:*outer-gaps-size* 15
+      swm-gaps:*head-gaps-size* 15)
 
-;;; protecc and SERVE
+(setf *message-window-gravity* :center
+      *input-window-gravity* :center
+      *window-border-style* :thin
+      *message-window-padding* 10
+      *maxsize-border-width* 5
+      *normal-border-width* 5
+      *transient-border-width* 2
+      stumpwm::*float-window-border* 2
+      stumpwm::*float-window-title-height* 5
+      *mouse-focus-policy* :click)
+;; SERVER ----------------------------------------------------------------------
+
 (ql:quickload :swank)
 (swank:create-server)
-
 
 (defun restart-swank (port)
   (if (> 0 port) (swank:stop-server port))
@@ -61,7 +84,6 @@ Refreshes font cache & returns updated values"
 
 
 ;; COMMANDS --------------------------------------------------------------------
-; doesn't seem to work through "run-shell-command"
 (defcommand lock () ()
   "A command to lock the DE with corrupted screen
 Pause PMC, remove tmp screenshot, capture new frame,
@@ -74,7 +96,6 @@ Every instance of `run-shell-command awaits output "
   (run-shell-command "scrot /tmp/screenshot.png" t)
   (run-shell-command "~/git/corrupter/corrupter /tmp/screenshot.png /tmp/out.png" t)
   (run-shell-command "i3lock -i /tmp/out.png" t))
-
 
 (defcommand vol-down () ()
   "Volume down through lmc
@@ -92,15 +113,21 @@ TODO: Make interactive"
 
 (defcommand run-or-raise-browser () ()
   "Opens the system browser, as exported in ~/.profile"
-    (run-or-raise (getenv "BROWSER") '()))
+
+  (run-or-raise  (getenv "BROWSER") '("firefox")))
+
+(defcommand toggle-gpu () ()
+   (message "toggle-gpu: This hasn't been implemented yet"))
 
 (defun run-shell-command-no-startup (command)
   (run-shell-command (concat "exec --no-startup-id " command)))
 
+
 ;;; KEYMAPS --------------------------------------------------------------------
+(set-prefix-key (kbd "s-f"))
 (defun show-key-seq (key seq val)
   "Shows the currently active key sequence if in a map
-e.g. s-t OR C-t"
+e.g. s-t OR s-f"
   (message (print-key-seq (reverse seq))))
 (add-hook *key-press-hook* 'show-key-seq)
 
@@ -113,6 +140,7 @@ e.g. s-t OR C-t"
 (defvar *toggle-map* (make-sparse-keymap))
 (define-key *top-map* (kbd "s-t") '*toggle-map*)
 (define-key *toggle-map* (kbd "g") "toggle-gaps")
+(define-key *toggle-map* (kbd "b") "toggle-gpu")
 ;; SUPER
 
 (define-key *top-map* (kbd "s-e") "emacs")
@@ -146,18 +174,3 @@ e.g. s-t OR C-t"
 (run-shell-command "compton")
 (run-shell-command "setbg ~/.config/wall.png")
 (load "~/.stumpwm.d/visual.lisp")
-
-(setf swm-gaps:*inner-gaps-size* 15
-      swm-gaps:*outer-gaps-size* 15
-      swm-gaps:*head-gaps-size* 15)
-
-(setf *message-window-gravity* :center
-      *input-window-gravity* :center
-      *window-border-style* :thin
-      *message-window-padding* 10
-      *maxsize-border-width* 5
-      *normal-border-width* 5
-      *transient-border-width* 2
-      stumpwm::*float-window-border* 2
-      stumpwm::*float-window-title-height* 5
-      *mouse-focus-policy* :click)
