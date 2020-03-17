@@ -23,7 +23,7 @@ While it would be nice to look at the root cause of the issue in :clx-truetype,
 Refreshes font cache & returns updated values"
   (setq clx-truetype::*font-dirs*
         (append (list(namestring (concat "/usr/share/fonts/" font "/")))
-                      clx-truetype::*font-dirs*))
+                clx-truetype::*font-dirs*))
   (xft:cache-fonts)
   clx-truetype:*font-dirs*)
 

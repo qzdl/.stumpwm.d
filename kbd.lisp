@@ -3,7 +3,6 @@
 
 ;;; PREFIX, EOU
 ; These bindings underpin the keyboard interaction inside stumpwm.
-
 (set-prefix-key (kbd "s-SPC"))
 (defun show-key-seq (key seq val)
   "Shows the currently active key sequence if in a map
@@ -18,9 +17,10 @@ e.g. s-t OR s-f"
 
 (defun expand-map (name bindings)
   (loop for bind in bindings
-        for key = (first bind)
-        for cmd = (second bind)
-        collect `(define-key ,name (kbd ,key) ,cmd)))
+        for keys = (ensure-list (first bind))
+        for cmd  = (second bind)
+        append (loop for key in keys
+                     collect `(define-key ,name (kbd ,key) ,cmd))))
 
 (defmacro extmap (name bindings)
   `(let ((_ "")) ; lambda macro?
@@ -41,27 +41,41 @@ e.g. s-t OR s-f"
      ("s-g" '*groups-map*)
 
      ;; QUALITY OF LIFE
+     ("s-c" "abort")
      ("s-?" "show-top-map")
      ("s-RET" "terminal")
-     ("s-:" "colon")  ; command mode
-     ("s-;" "exec")   ; shell exec
-     ("s-M-;" "eval") ; cl eval
+     ("S-s-RET" "terminal new") ; TODO: implement new option in command
+     ("s-n" "pull-hidden-next")
+     (("s-TAB" "s-p") "pull-hidden-previous"
+                      "an attempt a left-handed 'last window' bind")
 
+     ;; INPUT BASED (fire away, c-y)
+     ("s-:" "colon"
+            "fire into command mode")
+     (("s-d" "s-;") "exec"
+                    "fire into shell execution context")
+     (("s-D" "s-M-;") "eval"
+              "fire into cl eval; arbitrary sexps.")
+
+     ;; SUPER FUNCTION
      ("s-F2" "redisplay")
      ("s-F8" "select-display")
-     ("s-F9" "search") ;; TODO: port
+     ("s-F9" "search")
+     ("s-b" "banish"
+            "send mouse to max x,y on screen")
+     ("s-ESC" "quit"
+              "quits stumpwm")
+     ("s-=" "vol-up")
+     ("s--" "vol-down")
+     ("s-x" "lock")
 
-     ;; bindsym Print               exec --no-startup-id maimpick
-     ;; bindsym Shift+Print         exec --no-startup-id maim ~/screenshots/pic-full-"$(date '+%y%m%d-%H%M-%S').png"
-     ;; bindsym $mod+Print          exec --no-startup-id dmenurecord
+     ;; RECORDING
+     ("SunPrint_Screen" "screenpick")     ; printscr ;; TODO: port to CL
+     ("Sys_Req" "screennow")              ; SHIFT ^  ;; TODO: port to CL
+     ("s-SunPrint_Screen" "screenrecord") ; SUPER ^  ;; TODO: port to CL
      ;; bindsym $mod+Scroll_Lock    exec --no-startup-id "killall screenkey || screenkey"
      ;; bindsym $mod+Delete         exec $stoprec
      ;; bindsym XF86Launch1         exec --no-startup-id xset dpms force off
-     ;; RECORDING
-     ("SunPrint_Screen" "screenpick") ; printscr ;; TODO: port
-     ("Sys_Req" "screennow")          ; SHIFT ^  ;; TODO: port
-     ("s-SunPrint_Screen" "screenrecord")              ;; TODO: port
-
 
      ;; NAVIGATION
      ("s-h" "move-focus left")
@@ -78,8 +92,6 @@ e.g. s-t OR s-f"
      ("s-M-j" "exchange-direction down")
      ("s-M-k" "exchange-direction up")
      ("s-M-l" "exchange-direction right")))
-
-
 
 (defmap *toggle-cmds*
     (("g" "toggle-gaps")
@@ -105,28 +117,8 @@ e.g. s-t OR s-f"
      ("S" "hsplit")
      ("r" "iresize")
      ("f" "fullscreen")
+     ("Q" "only")
      ("i" "show-window-properties")
      ("k" "kill")))
 
-;; SUPER
-(define-key *top-map* (kbd "s-e") "emacs")
-(define-key *top-map* (kbd "s-w") "run-or-raise-browser")
-(define-key *top-map* (kbd "s-RET") "run-or-raise-terminal")
-
-;;; STUMPWM COMMANDS
-
 ;;
-(define-key *top-map* (kbd "s-n") "pull-hidden-next")
-(define-key *top-map* (kbd "s-p") "pull-hidden-previous")
-(define-key *top-map* (kbd "s-c") "abort")
-
-(define-key *top-map* (kbd "s-d") "exec")
-(define-key *top-map* (kbd "s-D") "eval")
-
-(define-key *top-map* (kbd "s-b") "banish")
-; "quit"
-(define-key *top-map* (kbd "s-ESC") "quit")
-
-(define-key *top-map* (kbd "s-=") "vol-up")
-(define-key *top-map* (kbd "s--") "vol-down")
-(define-key *top-map* (kbd "s-x") "lock")

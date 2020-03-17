@@ -79,4 +79,4 @@ Every instance of `run-shell-command awaits output "
   (run-shell-command "maim ~/screenshots/pic-full-\"$(date '+%y%m%d-%H%M-%S').png\""))
 
 (defcommand screenrecord () ()
-  (run-shell-command "screenrecord"))
+  (run-shell-command "dmenurecord"))

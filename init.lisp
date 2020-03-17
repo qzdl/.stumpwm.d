@@ -4,7 +4,7 @@
 ; [x] font size
 ; [x] background
 ; [x] transparency (compton?)
-; [ ] program *top-map* bindings
+; [x] program *top-map* bindings
 ; - [x] $EDITOR
 ; - [x] $BROWSER
 ; [x] lock (maybe ditch i3lock)
@@ -15,7 +15,8 @@
 ; [ ] scale inner gaps
 ; [ ] scale outer gaps
 ; [ ] scale fonts
-; [ ] split to files
+; [x] split to files
+; [ ] shuffle background & wal cmd/bind
 
 ;; SERVER --------------------------------------------------------------------
 ; TODO: only open server if reserved port is free
@@ -28,12 +29,12 @@
   (swank:start-server))
 
 ;;; EXTERNS --------------------------------------------------------------------
-;; annotations
-(run-shell-command "gromit-mpx")
 ;; the os
 (run-shell-command "emacs --daemon")
 ;; alpha energy
 (run-shell-command "compton")
+;; annotations
+(run-shell-command "gromit-mpx")
 ;; flavour of the day
 (run-shell-command "setbg ~/.config/wall.png")
 
