@@ -1,4 +1,23 @@
 (in-package :stumpwm)
+
+;; https://solb.io/blog/asynchronize-your-life%3A-shell-commands-10x-faster
+(defparameter *async-shell* (uiop:launch-program "bash" :input :stream :output :stream))
+(defun async-run (command)
+  "a faster run-shell-command with caveats: RETURN SOMETHING"
+  (write-line command (uiop:process-info-input *async-shell*))
+  (force-output (uiop:process-info-input *async-shell*))
+  (let* ((output-string (read-line (uiop:process-info-output *async-shell*)))
+         (stream (uiop:process-info-output *async-shell*)))
+    (if (listen stream)
+        (loop while (listen stream)
+              do (setf output-string (concatenate 'string
+                                                  output-string
+                                                  '(#\Newline)
+                                                  (read-line stream)))))
+    output-string))
+
+(async-run "cpu")
+
 ;; COMMANDS --------------------------------------------------------------------
 
 (defcommand show-top-map () ()
@@ -66,6 +85,12 @@ Every instance of `run-shell-command awaits output "
   "Opens the system browser, as exported in ~/.profile"
   (let ((browser (getenv "BROWSER")))
     (run-or-raise  browser `(:class ,browser)))) ;; TODO: figure out Brave-browser :class
+
+(defcommand run () ()
+  (run-shell-command "dmenu_run"))
+
+(defcommand cli (cmd) ((:string cmd))
+  (run-shell-command (concat "st -e " cmd)))
 
 (defcommand toggle-gpu () ()
    (message "toggle-gpu: This hasn't been implemented yet"))

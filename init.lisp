@@ -31,13 +31,23 @@
 ;;; EXTERNS --------------------------------------------------------------------
 ;; the os
 (run-shell-command "emacs --daemon")
-;; alpha energy
+;; alpha energy compositing
 (run-shell-command "compton")
+;; less sucky notifs
+(run-shell-command "dunst")
+;; hide the mouse for inactivity
+(run-shell-command "unclutter")
 ;; annotations
 (run-shell-command "gromit-mpx")
 ;; flavour of the day
 (run-shell-command "setbg ~/.config/wall.png")
+(run-shell-command "wal -i ~/config/wall.png")
+(run-shell-command "wal -w")
 
 (load "~/.stumpwm.d/visual.lisp")
 (load "~/.stumpwm.d/command.lisp")
 (load "~/.stumpwm.d/kbd.lisp")
+
+;; DEBUG
+;; (setq *debug-level* 2)
+;; (redirect-all-output (data-dir-file "debug-output" "txt"))

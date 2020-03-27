@@ -98,7 +98,9 @@ e.g. s-t OR s-f"
      ("b" "toggle-gpu")
      ("w" "toggle-wifi")
      ("b" "toggle-bluetooth")
-     ("m" "toggle-mute")))
+
+     ("m" "mode-line")
+     ("M" "toggle-mute")))
 
 (defmap *bluetooth-map*
     (("o" "bluetooth on")
@@ -108,17 +110,29 @@ e.g. s-t OR s-f"
 (defmap *application-map*
     (("e" "emacs")
      ("w" "browser")
-     ("t" "terminal")))
+     ("t" "terminal")
+     ("h" "cli htop")))
 
 (defmap *frame-cmds*
     (("l" "windowlist")
      ("=" "balance-frames")
+
      ("s" "vsplit")
      ("S" "hsplit")
+
      ("r" "iresize")
      ("f" "fullscreen")
      ("Q" "only")
      ("i" "show-window-properties")
-     ("k" "kill")))
+     ("k" "kill")
 
-;;
+     ("0" "select-window-by-number 0")
+     ("1" "select-window-by-number 1")
+     ("2" "select-window-by-number 2")
+     ("3" "select-window-by-number 3")
+     ("4" "select-window-by-number 4")
+     ("5" "select-window-by-number 5")
+     ("6" "select-window-by-number 6")
+     ("7" "select-window-by-number 7")
+     ("8" "select-window-by-number 8")
+     ("9" "select-window-by-number 9")))
