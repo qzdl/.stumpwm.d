@@ -1,7 +1,8 @@
 ;; VISUAL ----------------------------------------------------------------------
 (in-package :stumpwm)
 
-(ql:quickload :clx-truetype)
+;; local version in ~/quicklisp/local_projects/clx-truetype
+(ql:quickload :truetype-clx)
 (load-module "ttf-fonts") ; oof
 (load-module "swm-gaps")
 
@@ -27,11 +28,13 @@ Refreshes font cache & returns updated values"
   (xft:cache-fonts)
   clx-truetype:*font-dirs*)
 
-(restore-default-font-dir)
+;; (restore-default-font-dir)
 
-(add-font-dir "Liberation")
+;; (add-font-dir "Liberation")
 
-(defvar font-size 13)
+(defvar font-size 14)
+
+(xft:cache-fonts)
 
 (set-font (make-instance 'xft:font
                           :family "Liberation Mono"
@@ -42,9 +45,9 @@ Refreshes font cache & returns updated values"
 (if (not swm-gaps:*gaps-on*)
     (swm-gaps:toggle-gaps))
 
-(setf swm-gaps:*inner-gaps-size* 15
+(setf swm-gaps:*inner-gaps-size* 20
       swm-gaps:*outer-gaps-size* 0
-      swm-gaps:*head-gaps-size* 15)
+      swm-gaps:*head-gaps-size* 0)
 
 ;; WINDOW / FRAME
 (setf *message-window-gravity* :center

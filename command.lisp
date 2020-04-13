@@ -76,6 +76,12 @@ Every instance of `run-shell-command awaits output "
   (swap-vol! "up" 5)
   (get-vol t))
 
+
+(defcommand spotify () ()
+  "Opens the system terminal, as exported in ~/.profile"
+  (let ((cmd "spotify"))
+    (run-or-raise cmd `(:class ,(string-capitalize cmd)))))
+
 (defcommand terminal () ()
   "Opens the system terminal, as exported in ~/.profile"
   (let ((terminal (getenv "TERMINAL")))
@@ -86,8 +92,11 @@ Every instance of `run-shell-command awaits output "
   (let ((browser (getenv "BROWSER")))
     (run-or-raise  browser `(:class ,browser)))) ;; TODO: figure out Brave-browser :class
 
-(defcommand run () ()
+(Defcommand run () ()
   (run-shell-command "dmenu_run"))
+
+(defcommand srun (cmd) ((:string cmd))
+  (run-shell-command  cmd))
 
 (defcommand cli (cmd) ((:string cmd))
   (run-shell-command (concat "st -e " cmd)))
@@ -105,3 +114,6 @@ Every instance of `run-shell-command awaits output "
 
 (defcommand screenrecord () ()
   (run-shell-command "dmenurecord"))
+
+(defcommand killrec () ()
+  (run-shell-command))

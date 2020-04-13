@@ -41,8 +41,8 @@
 (run-shell-command "gromit-mpx")
 ;; flavour of the day
 (run-shell-command "setbg ~/.config/wall.png")
-(run-shell-command "wal -i ~/config/wall.png")
-(run-shell-command "wal -w")
+; (run-shell-command "wal -i ~/config/wall.png")
+; (run-shell-command "wal -w")
 
 (load "~/.stumpwm.d/visual.lisp")
 (load "~/.stumpwm.d/command.lisp")

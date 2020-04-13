@@ -60,7 +60,8 @@ e.g. s-t OR s-f"
      ;; SUPER FUNCTION
      ("s-F2" "redisplay")
      ("s-F8" "select-display")
-     ("s-F9" "search")
+     (("s-F9" "s-u") "srun ducksearch")
+
      ("s-b" "banish"
             "send mouse to max x,y on screen")
      ("s-ESC" "quit"
@@ -111,6 +112,7 @@ e.g. s-t OR s-f"
     (("e" "emacs")
      ("w" "browser")
      ("t" "terminal")
+     ("s" "spotify")
      ("h" "cli htop")))
 
 (defmap *frame-cmds*
