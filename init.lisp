@@ -20,13 +20,8 @@
 
 ;; SERVER --------------------------------------------------------------------
 ; TODO: only open server if reserved port is free
-(ql:quickload :swank)
-(swank:create-server)
-
-(defun restart-swank (port)
-  (if (> 0 port) (swank:stop-server port))
-  (ql:quickload :swank)
-  (swank:start-server))
+(ql:quickload :slynk)
+(slynk:create-server :port 4005)
 
 ;;; EXTERNS --------------------------------------------------------------------
 ;; the os
